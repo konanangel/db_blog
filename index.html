@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chỉnh sửa text1.txt</title>
+</head>
+<body>
+    <h1>Nội dung file text1.txt</h1>
+    <textarea id="editor" rows="10" cols="50"></textarea>
+    <button onclick="updateFile()">Lưu thay đổi</button>
+
+    <script>
+        const token = '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'; // Thay bằng token của cậu
+        const repo = 'konanangel/db_blog'; // Thay bằng thông tin repo của cậu
+        const filePath = 'db/text1.txt';
+
+        let currentSha = null; // Biến lưu SHA hiện tại của file
+
+        async function fetchContent() {
+            const url = `https://api.github.com/repos/${repo}/contents/${filePath}?t=${Date.now()}`;
+            const response = await fetch(url, {
+                headers: { 'Authorization': `token ${token}` }
+            });
+            if (!response.ok) {
+                console.error('Không thể tải file từ GitHub:', response.status);
+                return;
+            }
+
+            const data = await response.json();
+            const content = atob(data.content); // Decode Base64
+
+            // Kiểm tra nếu SHA thay đổi thì cập nhật nội dung
+            if (data.sha !== currentSha) {
+                currentSha = data.sha;
+                document.getElementById('editor').value = content;
+                console.log('Nội dung đã được cập nhật!');
+            }
+        }
+
+        async function updateFile() {
+            const newContent = document.getElementById('editor').value;
+
+            const url = `https://api.github.com/repos/${repo}/contents/${filePath}`;
+            const response = await fetch(url, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `token ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    message: 'Update text1.txt',
+                    content: btoa(newContent), // Encode Base64
+                    sha: currentSha
+                })
+            });
+
+            if (response.ok) {
+                alert('Đã lưu thành công!');
+                await fetchContent(); // Tải lại nội dung
+            } else {
+                alert('Lỗi khi lưu!');
+            }
+        }
+
+        // Tải nội dung lần đầu tiên khi mở trang
+        fetchContent();
+
+        // Polling: Cập nhật nội dung mỗi 5 giây
+        setInterval(fetchContent, 1000);
+    </script>
+</body>
+</html>
