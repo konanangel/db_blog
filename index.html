@@ -20,7 +20,7 @@
         async function fetchContent() {
             const url = `https://api.github.com/repos/${repo}/contents/${filePath}?t=${Date.now()}`;
             const response = await fetch(url, {
-                headers: { 'Authorization': `token ${AIzaSyCz6Z51MjBXWrsuQDlrjKsk6Y9W30eQ6eg}` }
+                headers: { 'Authorization': `token ${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}` }
             });
             if (!response.ok) {
                 console.error('Không thể tải file từ GitHub:', response.status);
