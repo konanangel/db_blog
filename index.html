@@ -11,7 +11,7 @@
     <button onclick="updateFile()">Lưu thay đổi</button>
 
     <script>
-        const token = ''; // Thay bằng token của cậu
+        const token = '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'; // Thay bằng token của cậu
         const repo = 'konanangel/db_blog'; // Thay bằng thông tin repo của cậu
         const filePath = 'db/text1.txt';
 
@@ -20,7 +20,7 @@
         async function fetchContent() {
             const url = `https://api.github.com/repos/${repo}/contents/${filePath}?t=${Date.now()}`;
             const response = await fetch(url, {
-                headers: { 'Authorization': `token ${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}` }
+                headers: { 'Authorization': `token ${token}` }
             });
             if (!response.ok) {
                 console.error('Không thể tải file từ GitHub:', response.status);
